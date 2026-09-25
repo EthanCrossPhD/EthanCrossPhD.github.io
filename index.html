@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DiD Analysis · Callaway &amp; Sant'Anna (2021)</title>
+<style>
+:root {
+  --bg:#0d1117; --sur:#161b22; --sur2:#21262d; --bdr:#30363d;
+  --txt:#e6edf3; --mut:#8b949e; --acc:#58a6ff;
+  --red:#f85149; --grn:#3fb950; --orn:#d29922;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--txt);line-height:1.6;}
+
+/* HEADER */
+.hdr{background:var(--sur);border-bottom:1px solid var(--bdr);padding:2rem 1.5rem 1.25rem;text-align:center;}
+.hdr h1{font-size:clamp(1.4rem,3vw,2rem);font-weight:700;margin-bottom:.35rem;}
+.hdr h1 span{color:var(--acc);}
+.hdr p{color:var(--mut);font-size:.85rem;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0d1117,#161b22);border-bottom:1px solid var(--bdr);padding:1.5rem 1rem;}
+.hero-grid{display:flex;flex-wrap:wrap;gap:.7rem;justify-content:center;max-width:920px;margin:0 auto;}
+.sbox{background:var(--sur);border:1px solid var(--bdr);border-radius:10px;min-width:120px;padding:.85rem 1.1rem;text-align:center;transition:border-color .2s;}
+.sbox:hover{border-color:var(--acc);}
+.sbox .sl{color:var(--mut);font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.25rem;}
+.sbox .sv{font-family:'Courier New',monospace;font-size:1.2rem;font-weight:700;}
+.sv.neg{color:var(--red);} .sv.pos{color:var(--grn);} .sv.inf{color:var(--acc);}
+
+/* MAIN */
+main{max-width:1060px;margin:0 auto;padding:1.5rem 1rem 3rem;}
+
+/* ALERT */
+.alert{border-radius:8px;font-size:.83rem;margin-bottom:1.25rem;padding:.65rem 1rem;}
+.alert-ok{background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);color:var(--grn);}
+.alert-inf{background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.3);color:var(--acc);}
+
+/* TABS */
+.tabs{display:flex;flex-wrap:wrap;gap:2px;border-bottom:2px solid var(--bdr);margin-bottom:1.5rem;}
+.tb{background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-2px;
+  color:var(--mut);cursor:pointer;font-size:.8rem;padding:.5rem .85rem;transition:color .15s;white-space:nowrap;}
+.tb:hover{color:var(--txt);}
+.tb.on{color:var(--acc);border-bottom-color:var(--acc);font-weight:600;}
+
+/* PANES */
+.pane{display:none;} .pane.on{display:block;}
+
+/* CARD */
+.card{background:var(--sur);border:1px solid var(--bdr);border-radius:10px;margin-bottom:1.25rem;overflow:hidden;}
+.ch{background:var(--sur2);border-bottom:1px solid var(--bdr);font-size:.83rem;font-weight:600;padding:.7rem 1.2rem;}
+.cb{padding:1.2rem;}
+
+/* METRIC GRID */
+.mg{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:.7rem;margin-bottom:1rem;}
+.met{background:var(--sur2);border:1px solid var(--bdr);border-radius:8px;padding:.65rem .9rem;}
+.met .ml{color:var(--mut);font-size:.65rem;letter-spacing:.04em;text-transform:uppercase;}
+.met .mv{font-family:monospace;font-size:1.1rem;font-weight:700;margin-top:.1rem;}
+
+/* TABLE */
+.tw{border:1px solid var(--bdr);border-radius:8px;overflow:hidden;overflow-x:auto;margin-bottom:.75rem;}
+table{border-collapse:collapse;font-size:.81rem;min-width:360px;width:100%;}
+thead th{background:var(--sur2);border-bottom:1px solid var(--bdr);color:var(--mut);font-size:.68rem;
+  font-weight:600;letter-spacing:.03em;padding:.52rem .8rem;text-align:right;text-transform:uppercase;white-space:nowrap;}
+thead th:first-child,thead th:nth-child(2){text-align:left;}
+tbody tr{border-bottom:1px solid rgba(48,54,61,.5);}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:rgba(255,255,255,.025);}
+tbody td{color:var(--mut);font-family:monospace;padding:.48rem .8rem;text-align:right;}
+tbody td:first-child{color:var(--txt);font-family:sans-serif;font-size:.8rem;font-weight:500;text-align:left;}
+td.neg{color:var(--red)!important;font-weight:600;}
+td.pos{color:var(--grn)!important;}
+td.mu{color:var(--mut)!important;}
+td.lft{text-align:left!important;font-family:sans-serif!important;}
+
+/* BADGES */
+.by{background:rgba(63,185,80,.12);border:1px solid rgba(63,185,80,.3);border-radius:3px;
+  color:var(--grn);font-family:sans-serif;font-size:.62rem;font-weight:700;padding:.12rem .4rem;text-transform:uppercase;}
+.bn{background:rgba(139,148,158,.08);border:1px solid rgba(139,148,158,.2);border-radius:3px;
+  color:var(--mut);font-family:sans-serif;font-size:.62rem;padding:.12rem .4rem;}
+.bc{background:rgba(63,185,80,.12);border:1px solid rgba(63,185,80,.3);border-radius:3px;
+  color:var(--grn);font-family:sans-serif;font-size:.62rem;padding:.12rem .4rem;}
+.bd{background:rgba(210,153,34,.12);border:1px solid rgba(210,153,34,.3);border-radius:3px;
+  color:var(--orn);font-family:sans-serif;font-size:.62rem;padding:.12rem .4rem;}
+
+/* CHART */
+.cw{background:var(--sur2);border:1px solid var(--bdr);border-radius:8px;margin-bottom:.85rem;overflow:hidden;padding:.4rem;}
+
+/* NOTE */
+.note{border-top:1px solid var(--bdr);color:var(--mut);font-size:.7rem;margin-top:.85rem;padding-top:.7rem;}
+
+/* REF */
+.ref{border-left:2px solid var(--acc);color:var(--mut);font-size:.78rem;margin-bottom:.7rem;padding-left:.8rem;}
+.ref strong{color:var(--txt);}
+
+/* SECTION LABEL */
+.sl2{color:var(--mut);font-size:.75rem;font-weight:600;letter-spacing:.04em;margin:.9rem 0 .45rem;text-transform:uppercase;}
+
+/* PRETREND BADGE */
+.ptb{align-items:center;background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.3);
+  border-radius:6px;color:var(--grn);display:inline-flex;font-size:.83rem;font-weight:600;gap:.4rem;padding:.45rem .9rem;}
+
+@media(max-width:560px){
+  .hero-grid{flex-direction:column;align-items:center;}
+  .sbox{width:100%;max-width:260px;}
+  .mg{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1><span>DiD</span> Analysis</h1>
+  <p>Callaway &amp; Sant'Anna (2021) &nbsp;·&nbsp; Doubly Robust Estimator &nbsp;·&nbsp; mpdta dataset &nbsp;·&nbsp; Bootstrap B = 999</p>
+</div>
+
+<div class="hero">
+  <div class="hero-grid">
+    <div class="sbox"><div class="sl">Overall ATT</div><div class="sv neg">−0.0804***</div></div>
+    <div class="sbox"><div class="sl">Std. Error</div><div class="sv inf">0.0194</div></div>
+    <div class="sbox"><div class="sl">95% CI</div><div class="sv inf">[−0.119, −0.042]</div></div>
+    <div class="sbox"><div class="sl">p-value</div><div class="sv pos">0.0000</div></div>
+    <div class="sbox"><div class="sl">Pre-trend p</div><div class="sv pos">0.138 ✓</div></div>
+    <div class="sbox"><div class="sl">N units</div><div class="sv inf">500</div></div>
+    <div class="sbox"><div class="sl">T periods</div><div class="sv inf">5</div></div>
+    <div class="sbox"><div class="sl">Cohorts</div><div class="sv inf">3</div></div>
+  </div>
+</div>
+
+<main>
+  <div class="alert alert-ok">✓ Statistically significant negative treatment effect &nbsp;·&nbsp; Pre-trend test passes χ²(3) = 5.513, p = 0.138 &nbsp;·&nbsp; 86.3% of Bacon weight from clean comparisons &nbsp;·&nbsp; No negative weights</div>
+
+  <div class="tabs">
+    <button class="tb on"   onclick="sw('overall',this)">Overall ATT</button>
+    <button class="tb"      onclick="sw('es',this)">Event Study</button>
+    <button class="tb"      onclick="sw('grp',this)">By Group</button>
+    <button class="tb"      onclick="sw('per',this)">By Period</button>
+    <button class="tb"      onclick="sw('gt',this)">ATT(g,t)</button>
+    <button class="tb"      onclick="sw('hon',this)">HonestDiD</button>
+    <button class="tb"      onclick="sw('bac',this)">Bacon</button>
+    <button class="tb"      onclick="sw('met',this)">Methodology</button>
+  </div>
+
+  <!-- ════ OVERALL ATT ════ -->
+  <div id="p-overall" class="pane on">
+    <div class="card">
+      <div class="ch">Overall ATT — Simple Aggregation</div>
+      <div class="cb">
+        <div class="mg">
+          <div class="met"><div class="ml">ATT</div><div class="mv" style="color:var(--red)">−0.0804</div></div>
+          <div class="met"><div class="ml">Std. Error</div><div class="mv" style="color:var(--acc)">0.0194</div></div>
+          <div class="met"><div class="ml">CI Lower</div><div class="mv">−0.1185</div></div>
+          <div class="met"><div class="ml">CI Upper</div><div class="mv">−0.0423</div></div>
+          <div class="met"><div class="ml">p-value</div><div class="mv" style="color:var(--grn)">0.0000***</div></div>
+        </div>
+        <div class="ptb">✓ Parallel Trends &nbsp;—&nbsp; Pre-trend χ²(3) = 5.513 &nbsp;|&nbsp; p = 0.1379</div>
+        <div class="note">CI = 95% uniform simultaneous intervals &nbsp;·&nbsp; Bootstrap B=999 &nbsp;·&nbsp; Method: DR &nbsp;·&nbsp; Control: nevertreated &nbsp;·&nbsp; Callaway &amp; Sant'Anna (2021)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ EVENT STUDY ════ -->
+  <div id="p-es" class="pane">
+    <div class="card">
+      <div class="ch">Event Study — Dynamic Aggregation</div>
+      <div class="cb">
+        <div class="cw">
+          <svg id="svg-es" viewBox="0 0 640 300" width="100%" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Event Time</th><th>ATT</th><th>SE</th><th>CI Lower</th><th>CI Upper</th><th>Sig.</th></tr></thead>
+            <tbody>
+              <tr><td style="color:var(--mut)">−3 &nbsp;<small>(pre)</small></td><td>0.0267</td><td>0.0148</td><td>−0.0113</td><td>0.0648</td><td><span class="bn">No</span></td></tr>
+              <tr><td style="color:var(--mut)">−2 &nbsp;<small>(pre)</small></td><td>−0.0036</td><td>0.0125</td><td>−0.0356</td><td>0.0284</td><td><span class="bn">No</span></td></tr>
+              <tr><td style="color:var(--mut)">−1 &nbsp;<small>(pre)</small></td><td>−0.0232</td><td>0.0158</td><td>−0.0638</td><td>0.0174</td><td><span class="bn">No</span></td></tr>
+              <tr><td>0</td><td>−0.0211</td><td>0.0120</td><td>−0.0519</td><td>0.0097</td><td><span class="bn">No</span></td></tr>
+              <tr><td>+1</td><td class="neg">−0.0530</td><td>0.0166</td><td>−0.0958</td><td>−0.0102</td><td><span class="by">Yes</span></td></tr>
+              <tr><td>+2</td><td class="neg">−0.1404</td><td>0.0366</td><td>−0.2347</td><td>−0.0462</td><td><span class="by">Yes</span></td></tr>
+              <tr><td>+3</td><td class="neg">−0.1069</td><td>0.0353</td><td>−0.1976</td><td>−0.0162</td><td><span class="by">Yes</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note">Uniform simultaneous CI via multiplier bootstrap (B=999) &nbsp;·&nbsp; Grey = pre-period &nbsp;·&nbsp; Red = significant post-treatment &nbsp;·&nbsp; Callaway &amp; Sant'Anna (2021)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ BY GROUP ════ -->
+  <div id="p-grp" class="pane">
+    <div class="card">
+      <div class="ch">ATT by Treatment Cohort</div>
+      <div class="cb">
+        <div class="tw">
+          <table>
+            <thead><tr><th>Cohort (g)</th><th>ATT</th><th>SE</th><th>CI Lower</th><th>CI Upper</th><th>Sig.</th></tr></thead>
+            <tbody>
+              <tr><td>2004</td><td class="neg">−0.0846</td><td>0.0267</td><td>−0.1431</td><td>−0.0261</td><td><span class="by">Yes</span></td></tr>
+              <tr><td>2006</td><td>−0.0202</td><td>0.0173</td><td>−0.0581</td><td>0.0177</td><td><span class="bn">No</span></td></tr>
+              <tr><td>2007</td><td>−0.0288</td><td>0.0166</td><td>−0.0652</td><td>0.0076</td><td><span class="bn">No</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note">Grouping by cohorts (first treatment period) &nbsp;·&nbsp; CI = 95% simultaneous uniform &nbsp;·&nbsp; Callaway &amp; Sant'Anna (2021)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ BY PERIOD ════ -->
+  <div id="p-per" class="pane">
+    <div class="card">
+      <div class="ch">ATT by Calendar Period</div>
+      <div class="cb">
+        <div class="tw">
+          <table>
+            <thead><tr><th>Period (t)</th><th>ATT</th><th>SE</th><th>CI Lower</th><th>CI Upper</th><th>Sig.</th></tr></thead>
+            <tbody>
+              <tr><td>2004</td><td>−0.0145</td><td>0.0229</td><td>−0.0694</td><td>0.0404</td><td><span class="bn">No</span></td></tr>
+              <tr><td>2005</td><td class="neg">−0.0764</td><td>0.0310</td><td>−0.1507</td><td>−0.0022</td><td><span class="by">Yes</span></td></tr>
+              <tr><td>2006</td><td>−0.0462</td><td>0.0213</td><td>−0.0971</td><td>0.0048</td><td><span class="bn">No</span></td></tr>
+              <tr><td>2007</td><td class="neg">−0.0396</td><td>0.0134</td><td>−0.0718</td><td>−0.0073</td><td><span class="by">Yes</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note">Aggregation by calendar periods &nbsp;·&nbsp; CI = 95% simultaneous uniform &nbsp;·&nbsp; Callaway &amp; Sant'Anna (2021)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ ATT(g,t) ════ -->
+  <div id="p-gt" class="pane">
+    <div class="card">
+      <div class="ch">ATT(g,t) — Group × Period Estimates</div>
+      <div class="cb">
+        <div class="tw">
+          <table>
+            <thead><tr><th>Group (g)</th><th>Period (t)</th><th>ATT(g,t)</th><th>SE</th><th>CI Lower</th><th>CI Upper</th><th>Sig.</th></tr></thead>
+            <tbody>
+              <tr><td>2004</td><td class="mu">2004</td><td>−0.0145</td><td>0.0226</td><td>−0.0759</td><td>0.0468</td><td><span class="bn">No</span></td></tr>
+              <tr><td>2004</td><td class="mu">2005</td><td>−0.0764</td><td>0.0293</td><td>−0.1559</td><td>0.0031</td><td><span class="bn">No</span></td></tr>
+              <tr><td>2004</td><td class="mu">2006</td><td class="neg">−0.1404</td><td>0.0386</td><td>−0.2453</td><td>−0.0356</td><td><span class="by">Yes</span></td></tr>
+              <tr><td>2004</td><td class="mu">2007</td><td class="neg">−0.1069</td><td>0.0341</td><td>−0.1995</td><td>−0.0143</td><td><span class="by">Yes</span></td></tr>
+              <tr><td>2006</td><td class="mu">2004</td><td>−0.0005</td><td>0.0225</td><td>−0.0615</td><td>0.0606</td><td><span class="bn">No</span></td></tr>
+              <tr><td>2006</td><td class="mu">2005</td><td>−0.0062</td><td>0.0199</td><td>−0.0604</td><td>0.0480</td><td><span class="bn">No</span></td></tr>
+              <tr><td>2006</td><td class="mu">2006</td><td>0.0010</td><td>0.0189</td><td>−0.0504</td><td>0.0523</td><td><span class="bn">No</span></td></tr>
+              <tr><td>2006</td><td class="mu">2007</td><td>−0.0413</td><td>0.0190</td><td>−0.0928</td><td>0.0102</td><td><span class="bn">No</span></td></tr>
+              <tr><td>2007</td><td class="mu">2004</td><td>0.0267</td><td>0.0143</td><td>−0.0123</td><td>0.0657</td><td><span class="bn">No</span></td></tr>
+              <tr><td>2007</td><td class="mu">2005</td><td>−0.0046</td><td>0.0165</td><td>−0.0494</td><td>0.0402</td><td><span class="bn">No</span></td></tr>
+              <tr><td>2007</td><td class="mu">2006</td><td>−0.0284</td><td>0.0188</td><td>−0.0796</td><td>0.0227</td><td><span class="bn">No</span></td></tr>
+              <tr><td>2007</td><td class="mu">2007</td><td>−0.0288</td><td>0.0166</td><td>−0.0740</td><td>0.0165</td><td><span class="bn">No</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note">ATT(g,t) = average treatment effect for cohort g in period t &nbsp;·&nbsp; Callaway &amp; Sant'Anna (2021)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ HONESTDID ════ -->
+  <div id="p-hon" class="pane">
+    <div class="card">
+      <div class="ch">HonestDiD Sensitivity — Rambachan &amp; Roth (2023)</div>
+      <div class="cb">
+        <div class="alert alert-inf" style="margin-bottom:.85rem">
+          Original CI: [−0.1072, −0.0535] &nbsp;·&nbsp; δ<sub>SD</sub> assumption &nbsp;·&nbsp; Result remains significant up to M ≈ 0.007
+        </div>
+        <div class="cw">
+          <svg id="svg-hon" viewBox="0 0 640 260" width="100%" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>M (max deviation)</th><th>CI Lower</th><th>CI Upper</th><th>Sig.</th></tr></thead>
+            <tbody>
+              <tr><td>0.0000</td><td>−0.1050</td><td>−0.0398</td><td><span class="by">Yes</span></td></tr>
+              <tr><td>0.0070</td><td>−0.1593</td><td>−0.0111</td><td><span class="by">Yes</span></td></tr>
+              <tr><td>0.0140</td><td>−0.2157</td><td>0.0184</td><td><span class="bn">No</span></td></tr>
+              <tr><td>0.0211</td><td>−0.2607</td><td>0.0560</td><td><span class="bn">No</span></td></tr>
+              <tr><td>0.0281</td><td>−0.3058</td><td>0.0923</td><td><span class="bn">No</span></td></tr>
+              <tr><td>0.0351</td><td>−0.3513</td><td>0.1264</td><td><span class="bn">No</span></td></tr>
+              <tr><td>0.0421</td><td>−0.3986</td><td>0.1565</td><td><span class="bn">No</span></td></tr>
+              <tr><td>0.0491</td><td>−0.4527</td><td>0.1758</td><td><span class="bn">No</span></td></tr>
+              <tr><td>0.0561</td><td>−0.4878</td><td>0.2109</td><td><span class="bn">No</span></td></tr>
+              <tr><td>0.0632</td><td>−0.5229</td><td>0.2460</td><td><span class="bn">No</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note">M = max. allowed deviation from pre-treatment parallel trends &nbsp;·&nbsp; Rambachan &amp; Roth (2023) &nbsp;·&nbsp; δ<sub>SD</sub> assumption</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ BACON ════ -->
+  <div id="p-bac" class="pane">
+    <div class="card">
+      <div class="ch">Goodman-Bacon Decomposition</div>
+      <div class="cb">
+        <div class="mg" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr))">
+          <div class="met"><div class="ml">TWFE β</div><div class="mv" style="color:var(--red)">−0.0365</div></div>
+          <div class="met"><div class="ml">N 2×2 pairs</div><div class="mv">9</div></div>
+          <div class="met"><div class="ml">Neg. weight share</div><div class="mv" style="color:var(--grn)">0.0%</div></div>
+          <div class="met"><div class="ml">Clean weight share</div><div class="mv" style="color:var(--grn)">86.3%</div></div>
+        </div>
+
+        <div class="sl2">Summary by Type</div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Type</th><th>N pairs</th><th>Total weight</th><th>Wtd. estimate</th><th>Clean?</th></tr></thead>
+            <tbody>
+              <tr><td>Earlier vs Later Treated</td><td>3</td><td>0.0833</td><td>−0.0198</td><td><span class="bd">No</span></td></tr>
+              <tr><td>Later vs Earlier Treated</td><td>3</td><td>0.0539</td><td>0.0046</td><td><span class="bc">Yes</span></td></tr>
+              <tr><td style="color:var(--grn);font-weight:600">Treated vs Untreated</td><td>3</td><td style="color:var(--grn);font-weight:600">0.8628</td><td>−0.0407</td><td><span class="bc">Yes</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sl2">Individual 2×2 DiDs</div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Comparison type</th><th>Weight</th><th>Estimate</th></tr></thead>
+            <tbody>
+              <tr><td>Earlier vs Later Treated</td><td>0.0520</td><td>0.0185</td></tr>
+              <tr><td>Earlier vs Later Treated</td><td>0.0260</td><td class="neg">−0.0911</td></tr>
+              <tr><td>Later vs Earlier Treated</td><td>0.0173</td><td>0.0106</td></tr>
+              <tr><td>Earlier vs Later Treated</td><td>0.0053</td><td>−0.0456</td></tr>
+              <tr><td>Treated vs Untreated</td><td>0.5357</td><td>−0.0431</td></tr>
+              <tr><td>Treated vs Untreated</td><td>0.2453</td><td>−0.0226</td></tr>
+              <tr><td>Treated vs Untreated</td><td>0.0818</td><td>−0.0797</td></tr>
+              <tr><td>Later vs Earlier Treated</td><td>0.0260</td><td>−0.0196</td></tr>
+              <tr><td>Later vs Earlier Treated</td><td>0.0106</td><td>0.0543</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note">TWFE = Σ wₖ · 2×2 DiDₖ &nbsp;·&nbsp; Goodman-Bacon (2021) &nbsp;·&nbsp; 86.3% of weight from clean Treated vs Untreated comparisons &nbsp;·&nbsp; No negative weights</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ METHODOLOGY ════ -->
+  <div id="p-met" class="pane">
+    <div class="card">
+      <div class="ch">Analysis Configuration</div>
+      <div class="cb">
+        <div class="tw" style="margin-bottom:1.5rem">
+          <table>
+            <tbody>
+              <tr><td style="color:var(--mut);font-family:sans-serif;font-size:.78rem;width:45%">Outcome variable (yname)</td><td style="color:var(--txt);font-family:monospace;text-align:left">lemp</td></tr>
+              <tr><td style="color:var(--mut);font-family:sans-serif;font-size:.78rem">Time variable (tname)</td><td style="color:var(--txt);font-family:monospace;text-align:left">year</td></tr>
+              <tr><td style="color:var(--mut);font-family:sans-serif;font-size:.78rem">ID variable (idname)</td><td style="color:var(--txt);font-family:monospace;text-align:left">countyreal</td></tr>
+              <tr><td style="color:var(--mut);font-family:sans-serif;font-size:.78rem">Treatment variable (gname)</td><td style="color:var(--txt);font-family:monospace;text-align:left">first.treat</td></tr>
+              <tr><td style="color:var(--mut);font-family:sans-serif;font-size:.78rem">Control group</td><td style="color:var(--txt);font-family:monospace;text-align:left">nevertreated</td></tr>
+              <tr><td style="color:var(--mut);font-family:sans-serif;font-size:.78rem">Estimation method</td><td style="color:var(--txt);font-family:monospace;text-align:left">DR (Doubly Robust)</td></tr>
+              <tr><td style="color:var(--mut);font-family:sans-serif;font-size:.78rem">Bootstrap iterations</td><td style="color:var(--txt);font-family:monospace;text-align:left">999</td></tr>
+              <tr><td style="color:var(--mut);font-family:sans-serif;font-size:.78rem">Random seed</td><td style="color:var(--txt);font-family:monospace;text-align:left">42</td></tr>
+              <tr><td style="color:var(--mut);font-family:sans-serif;font-size:.78rem">Anticipation periods</td><td style="color:var(--txt);font-family:monospace;text-align:left">0</td></tr>
+              <tr><td style="color:var(--mut);font-family:sans-serif;font-size:.78rem">Covariates</td><td style="color:var(--txt);font-family:monospace;text-align:left">lpop</td></tr>
+              <tr><td style="color:var(--mut);font-family:sans-serif;font-size:.78rem">Cluster variable</td><td style="color:var(--txt);font-family:monospace;text-align:left">—</td></tr>
+              <tr><td style="color:var(--mut);font-family:sans-serif;font-size:.78rem">Dataset rows</td><td style="color:var(--txt);font-family:monospace;text-align:left">2,500</td></tr>
+              <tr><td style="color:var(--mut);font-family:sans-serif;font-size:.78rem">Unique units (N)</td><td style="color:var(--txt);font-family:monospace;text-align:left">500</td></tr>
+              <tr><td style="color:var(--mut);font-family:sans-serif;font-size:.78rem">Time periods (T)</td><td style="color:var(--txt);font-family:monospace;text-align:left">5 &nbsp;(2003–2007)</td></tr>
+              <tr><td style="color:var(--mut);font-family:sans-serif;font-size:.78rem">Treatment cohorts</td><td style="color:var(--txt);font-family:monospace;text-align:left">3 &nbsp;(2004, 2006, 2007)</td></tr>
+              <tr><td style="color:var(--mut);font-family:sans-serif;font-size:.78rem">Balanced panel</td><td style="color:var(--grn);font-family:monospace;text-align:left">Yes</td></tr>
+              <tr><td style="color:var(--mut);font-family:sans-serif;font-size:.78rem">Has never-treated</td><td style="color:var(--grn);font-family:monospace;text-align:left">Yes</td></tr>
+              <tr><td style="color:var(--mut);font-family:sans-serif;font-size:.78rem">Analysis date</td><td style="color:var(--txt);font-family:monospace;text-align:left">2026-09-25</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="font-size:.83rem;font-weight:600;margin-bottom:.7rem">References</div>
+        <div class="ref"><strong>Callaway, B. &amp; Sant'Anna, P.H.C. (2021).</strong> Difference-in-Differences with Multiple Time Periods. <em>Journal of Econometrics</em>, 225(2), 200–230.</div>
+        <div class="ref"><strong>Goodman-Bacon, A. (2021).</strong> Difference-in-differences with variation in treatment timing. <em>Journal of Econometrics</em>, 225(2), 254–277.</div>
+        <div class="ref"><strong>Rambachan, A. &amp; Roth, J. (2023).</strong> A More Credible Approach to Parallel Trends. <em>Review of Economic Studies</em>, 90(5), 2555–2591.</div>
+        <div class="note">* p&lt;0.1 &nbsp;** p&lt;0.05 &nbsp;*** p&lt;0.01 &nbsp;·&nbsp; CI = 95% uniform simultaneous confidence intervals &nbsp;·&nbsp; Whiskers = 95% CI</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer style="border-top:1px solid var(--bdr);color:var(--mut);font-size:.7rem;padding:1.25rem;text-align:center">
+  DiD Analysis &nbsp;·&nbsp; Callaway &amp; Sant'Anna (2021) &nbsp;·&nbsp; DR Estimator &nbsp;·&nbsp; B=999 &nbsp;·&nbsp; mpdta &nbsp;·&nbsp; N=500 &nbsp;·&nbsp; T=5 &nbsp;·&nbsp; 2026-09-25
+</footer>
+
+<script>
+// ── Tab switching ──────────────────────────────────────────────────────────
+function sw(name, btn) {
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(b => b.classList.remove('on'));
+  document.getElementById('p-' + name).classList.add('on');
+  btn.classList.add('on');
+  if (name === 'es')  drawES();
+  if (name === 'hon') drawHon();
+}
+
+// ── SVG helpers ────────────────────────────────────────────────────────────
+function mkEl(tag, attrs) {
+  const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  Object.entries(attrs).forEach(([k, v]) => e.setAttribute(k, v));
+  return e;
+}
+function mkTxt(tag, attrs, text) {
+  const e = mkEl(tag, attrs); e.textContent = text; return e;
+}
+
+// ── Event Study ────────────────────────────────────────────────────────────
+function drawES() {
+  const svg = document.getElementById('svg-es');
+  if (svg.dataset.drawn) return;
+  svg.dataset.drawn = '1';
+
+  const D = [
+    { t:-3, a: 0.0267, lo:-0.0113, hi: 0.0648, s:false },
+    { t:-2, a:-0.0036, lo:-0.0356, hi: 0.0284, s:false },
+    { t:-1, a:-0.0232, lo:-0.0638, hi: 0.0174, s:false },
+    { t: 0, a:-0.0211, lo:-0.0519, hi: 0.0097, s:false },
+    { t: 1, a:-0.0530, lo:-0.0958, hi:-0.0102, s:true  },
+    { t: 2, a:-0.1404, lo:-0.2347, hi:-0.0462, s:true  },
+    { t: 3, a:-0.1069, lo:-0.1976, hi:-0.0162, s:true  },
+  ];
+
+  const W=640,H=300,ml=65,mr=25,mt=32,mb=46;
+  const pw=W-ml-mr, ph=H-mt-mb;
+  const yMn=-0.27, yMx=0.13, xMn=-3.5, xMx=3.5;
+  const xs = t => ml+(t-xMn)/(xMx-xMn)*pw;
+  const ys = v => mt+(yMx-v)/(yMx-yMn)*ph;
+
+  // Y grid
+  [-0.25,-0.20,-0.15,-0.10,-0.05,0,0.05,0.10].forEach(v => {
+    svg.appendChild(mkEl('line',{x1:ml,y1:ys(v),x2:W-mr,y2:ys(v),
+      stroke:v===0?'#484f58':'#21262d','stroke-width':v===0?1.5:0.8}));
+    svg.appendChild(mkTxt('text',{x:ml-5,y:ys(v)+3.5,'text-anchor':'end',
+      fill:'#6e7681','font-size':'9.5'},v.toFixed(2)));
+  });
+
+  // X axis
+  for (let t=-3;t<=3;t++) {
+    const x=xs(t);
+    svg.appendChild(mkEl('line',{x1:x,y1:mt+ph,x2:x,y2:mt+ph+5,stroke:'#484f58','stroke-width':1}));
+    svg.appendChild(mkTxt('text',{x:x,y:mt+ph+17,'text-anchor':'middle',
+      fill:'#6e7681','font-size':'10.5'},t===0?'0':t>0?'+'+t:''+t));
+  }
+  svg.appendChild(mkTxt('text',{x:ml+pw/2,y:H-4,'text-anchor':'middle',
+    fill:'#6e7681','font-size':'10'},'Event Time (periods relative to treatment)'));
+  svg.appendChild(mkTxt('text',{x:11,y:mt+ph/2,'text-anchor':'middle',
+    fill:'#6e7681','font-size':'10',transform:`rotate(-90,11,${mt+ph/2})`},'ATT'));
+
+  // Treatment divider
+  const tx = xs(-0.5);
+  svg.appendChild(mkEl('line',{x1:tx,y1:mt,x2:tx,y2:mt+ph,
+    stroke:'#484f58','stroke-width':1.5,'stroke-dasharray':'5,3'}));
+  svg.appendChild(mkTxt('text',{x:xs(-1.8),y:mt+13,'text-anchor':'middle',
+    fill:'#3d444d','font-size':'8.5','font-style':'italic'},'pre-treatment'));
+  svg.appendChild(mkTxt('text',{x:xs(1.5),y:mt+13,'text-anchor':'middle',
+    fill:'#3d444d','font-size':'8.5','font-style':'italic'},'post-treatment'));
+
+  // Connect dots (behind everything)
+  const pts = D.map(d=>`${xs(d.t)},${ys(d.a)}`).join(' ');
+  svg.appendChild(mkEl('polyline',{points:pts,fill:'none',
+    stroke:'#484f58','stroke-width':'1','stroke-dasharray':'2,2',opacity:'0.5'}));
+
+  // CI bands + error bars + dots
+  D.forEach(d => {
+    const x=xs(d.t), ya=ys(d.a), yl=ys(d.lo), yh=ys(d.hi);
+    const col = d.s ? '#f85149' : (d.t>=0 ? '#58a6ff' : '#8b949e');
+    svg.appendChild(mkEl('rect',{x:x-5,y:yh,width:10,height:yl-yh,
+      fill:col,opacity:'0.13',rx:'2'}));
+    svg.appendChild(mkEl('line',{x1:x,y1:yl,x2:x,y2:yh,stroke:col,'stroke-width':'1.7'}));
+    svg.appendChild(mkEl('line',{x1:x-5,y1:yl,x2:x+5,y2:yl,stroke:col,'stroke-width':'1.7'}));
+    svg.appendChild(mkEl('line',{x1:x-5,y1:yh,x2:x+5,y2:yh,stroke:col,'stroke-width':'1.7'}));
+    svg.appendChild(mkEl('circle',{cx:x,cy:ya,r:'5.5',
+      fill:col,stroke:'#161b22','stroke-width':'2'}));
+  });
+
+  // Legend
+  const lx=W-mr-140, ly=mt+ph-52;
+  [{c:'#8b949e',l:'Pre-period'},{c:'#58a6ff',l:'Post (not sig.)'},{c:'#f85149',l:'Significant'}]
+    .forEach((item,i) => {
+      svg.appendChild(mkEl('circle',{cx:lx,cy:ly+i*16,r:'4.5',fill:item.c}));
+      svg.appendChild(mkTxt('text',{x:lx+11,y:ly+i*16+4,fill:'#8b949e','font-size':'9'},item.l));
+    });
+}
+
+// ── HonestDiD ──────────────────────────────────────────────────────────────
+function drawHon() {
+  const svg = document.getElementById('svg-hon');
+  if (svg.dataset.drawn) return;
+  svg.dataset.drawn = '1';
+
+  const D = [
+    {m:0.0000, lo:-0.1050, hi:-0.0398, s:true },
+    {m:0.0070, lo:-0.1593, hi:-0.0111, s:true },
+    {m:0.0140, lo:-0.2157, hi: 0.0184, s:false},
+    {m:0.0211, lo:-0.2607, hi: 0.0560, s:false},
+    {m:0.0281, lo:-0.3058, hi: 0.0923, s:false},
+    {m:0.0351, lo:-0.3513, hi: 0.1264, s:false},
+    {m:0.0421, lo:-0.3986, hi: 0.1565, s:false},
+    {m:0.0491, lo:-0.4527, hi: 0.1758, s:false},
+    {m:0.0561, lo:-0.4878, hi: 0.2109, s:false},
+    {m:0.0632, lo:-0.5229, hi: 0.2460, s:false},
+  ];
+
+  const W=640,H=260,ml=68,mr=25,mt=28,mb=46;
+  const pw=W-ml-mr, ph=H-mt-mb;
+  const yMn=-0.62, yMx=0.36, xMn=-0.003, xMx=0.069;
+  const xs = m => ml+(m-xMn)/(xMx-xMn)*pw;
+  const ys = v => mt+(yMx-v)/(yMx-yMn)*ph;
+
+  // Y grid
+  [-0.5,-0.4,-0.3,-0.2,-0.1,0,0.1,0.2,0.3].forEach(v => {
+    svg.appendChild(mkEl('line',{x1:ml,y1:ys(v),x2:W-mr,y2:ys(v),
+      stroke:v===0?'#484f58':'#21262d','stroke-width':v===0?1.5:0.8}));
+    svg.appendChild(mkTxt('text',{x:ml-5,y:ys(v)+3.5,'text-anchor':'end',
+      fill:'#6e7681','font-size':'9'},v.toFixed(1)));
+  });
+
+  // Original CI reference lines
+  [-0.1072,-0.0535].forEach(v => {
+    svg.appendChild(mkEl('line',{x1:ml,y1:ys(v),x2:W-mr,y2:ys(v),
+      stroke:'#484f58','stroke-width':0.9,'stroke-dasharray':'4,3'}));
+  });
+  svg.appendChild(mkTxt('text',{x:W-mr-2,y:ys(-0.0535)-4,'text-anchor':'end',
+    fill:'#484f58','font-size':'8.5'},'original CI'));
+
+  // Filled band
+  const uPts = D.map(d=>`${xs(d.m)},${ys(d.hi)}`).join(' ');
+  const lPts = [...D].reverse().map(d=>`${xs(d.m)},${ys(d.lo)}`).join(' ');
+  svg.appendChild(mkEl('polygon',{points:`${uPts} ${lPts}`,fill:'#58a6ff',opacity:'0.07'}));
+
+  // CI bars
+  D.forEach(d => {
+    const x=xs(d.m), yl=ys(d.lo), yh=ys(d.hi);
+    const col = d.s ? '#3fb950' : '#f85149';
+    svg.appendChild(mkEl('line',{x1:x,y1:yl,x2:x,y2:yh,stroke:col,'stroke-width':'2.8',opacity:'0.75'}));
+    svg.appendChild(mkEl('line',{x1:x-5,y1:yl,x2:x+5,y2:yl,stroke:col,'stroke-width':'1.6'}));
+    svg.appendChild(mkEl('line',{x1:x-5,y1:yh,x2:x+5,y2:yh,stroke:col,'stroke-width':'1.6'}));
+  });
+
+  // X axis
+  D.forEach(d => {
+    const x=xs(d.m);
+    svg.appendChild(mkEl('line',{x1:x,y1:mt+ph,x2:x,y2:mt+ph+4,stroke:'#484f58','stroke-width':1}));
+    svg.appendChild(mkTxt('text',{x:x,y:mt+ph+14,'text-anchor':'middle',
+      fill:'#6e7681','font-size':'8.5'},d.m.toFixed(3)));
+  });
+  svg.appendChild(mkTxt('text',{x:ml+pw/2,y:H-4,'text-anchor':'middle',
+    fill:'#6e7681','font-size':'10'},'M (max. allowed pre-trend deviation)'));
+  svg.appendChild(mkTxt('text',{x:11,y:mt+ph/2,'text-anchor':'middle',
+    fill:'#6e7681','font-size':'10',transform:`rotate(-90,11,${mt+ph/2})`},'CI Bounds'));
+
+  // Legend
+  const lx=ml+16, ly=mt+15;
+  svg.appendChild(mkEl('line',{x1:lx,y1:ly,x2:lx+18,y2:ly,stroke:'#3fb950','stroke-width':'2.5'}));
+  svg.appendChild(mkTxt('text',{x:lx+23,y:ly+4,fill:'#8b949e','font-size':'9'},'Significant'));
+  svg.appendChild(mkEl('line',{x1:lx,y1:ly+16,x2:lx+18,y2:ly+16,stroke:'#f85149','stroke-width':'2.5'}));
+  svg.appendChild(mkTxt('text',{x:lx+23,y:ly+20,fill:'#8b949e','font-size':'9'},'Not significant'));
+}
+</script>
+</body>
+</html>
