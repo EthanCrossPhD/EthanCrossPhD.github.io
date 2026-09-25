@@ -33,7 +33,6 @@
     .mono  { font-family: 'JetBrains Mono', monospace; }
     a      { text-decoration: none; }
 
-    /* ── Gradient helpers ───────────────────────────────────── */
     .hero-glow {
       background: radial-gradient(ellipse 80% 60% at 50% -10%,
         rgba(99,102,241,.22) 0%, transparent 70%);
@@ -45,7 +44,6 @@
       background-clip: text;
     }
 
-    /* ── Buttons ────────────────────────────────────────────── */
     .btn-primary {
       background: linear-gradient(135deg, var(--indigo), var(--blue));
       color: #fff;
@@ -61,7 +59,6 @@
     }
     .btn-ghost:hover { background: rgba(255,255,255,.06); }
 
-    /* ── Cards ──────────────────────────────────────────────── */
     .card {
       background: rgba(255,255,255,.025);
       border: 1px solid var(--border);
@@ -77,7 +74,6 @@
       box-shadow: 0 24px 64px rgba(0,0,0,.55);
     }
 
-    /* ── Syntax colours ─────────────────────────────────────── */
     .rc { color: #6a737d; }
     .rk { color: #ff7b72; }
     .rs { color: #a5d6ff; }
@@ -85,23 +81,19 @@
     .rv { color: #79c0ff; }
     .ra { color: #ffa657; }
 
-    /* ── Terminal output ────────────────────────────────────── */
     .term { font-family:'JetBrains Mono',monospace; font-size:.78rem; line-height:1.75; }
     .term .th { color:#58a6ff; font-weight:600; }
     .term .tv { color:var(--green); }
     .term .ts { color:var(--orange); }
     .term .td { color:var(--dim); }
 
-    /* ── Animations ─────────────────────────────────────────── */
     @keyframes spin  { to { transform: rotate(360deg); } }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
     .spin-anim { animation: spin .8s linear infinite; display:inline-block; }
     .blink     { animation: blink 1.6s ease-in-out infinite; }
 
-    /* ── Responsive hero ────────────────────────────────────── */
     .hero-h1 { font-size: clamp(2.4rem, 7vw, 5rem); }
 
-    /* ── Layout helpers ─────────────────────────────────────── */
     .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
     .container-sm { max-width: 860px; margin: 0 auto; padding: 0 1.5rem; }
   </style>
@@ -109,16 +101,11 @@
 
 <body>
 
-<!-- ════════════════════════════════════════════
-     NAV
-════════════════════════════════════════════ -->
 <nav style="position:sticky;top:0;z-index:50;
             border-bottom:1px solid var(--border);
             background:rgba(7,11,24,.88);
             backdrop-filter:blur(14px);">
   <div class="container" style="height:60px;display:flex;align-items:center;justify-content:space-between;">
-
-    <!-- Logo -->
     <div style="display:flex;align-items:center;gap:.7rem;">
       <div class="btn-primary"
            style="width:32px;height:32px;border-radius:8px;display:flex;
@@ -132,8 +119,6 @@
         BETA
       </span>
     </div>
-
-    <!-- Links -->
     <div style="display:flex;align-items:center;gap:1.25rem;">
       <a href="https://twitter.com/UltimateDiD" target="_blank"
          style="color:var(--muted);font-size:.85rem;transition:color .2s;"
@@ -145,18 +130,12 @@
         ▶ Demo
       </a>
     </div>
-
   </div>
 </nav>
 
 
-<!-- ════════════════════════════════════════════
-     HERO
-════════════════════════════════════════════ -->
 <section class="hero-glow" style="padding:5.5rem 1.5rem 4.5rem;text-align:center;">
   <div class="container-sm">
-
-    <!-- Live badge -->
     <div class="badge-live"
          style="display:inline-flex;align-items:center;gap:.5rem;
                 padding:.4rem 1.1rem;border-radius:100px;margin-bottom:2rem;">
@@ -168,7 +147,6 @@
       </span>
     </div>
 
-    <!-- Headline -->
     <h1 class="hero-h1"
         style="font-weight:900;line-height:1.06;letter-spacing:-.03em;
                margin-bottom:1.25rem;">
@@ -176,7 +154,6 @@
       <span class="gradient-text">Done Right.</span>
     </h1>
 
-    <!-- Subtitle -->
     <p style="font-size:1.15rem;color:var(--muted);line-height:1.65;
               margin-bottom:.7rem;max-width:600px;margin-left:auto;margin-right:auto;">
       Professional difference-in-differences analysis<br>
@@ -187,7 +164,6 @@
       Upload → Validate → Run → Export
     </p>
 
-    <!-- CTA -->
     <div style="display:flex;flex-wrap:wrap;gap:1rem;
                 justify-content:center;margin-bottom:3.75rem;">
       <a href="#demo" class="btn-primary"
@@ -201,7 +177,6 @@
       </a>
     </div>
 
-    <!-- Stats -->
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
                 gap:1rem;max-width:600px;margin:0 auto;">
       <div class="card" style="border-radius:12px;padding:1rem 0.75rem;">
@@ -226,13 +201,9 @@
 </section>
 
 
-<!-- ════════════════════════════════════════════
-     WEBR DEMO
-════════════════════════════════════════════ -->
 <section id="demo" style="padding:5rem 1.5rem;background:rgba(255,255,255,.012);">
   <div class="container-sm">
 
-    <!-- Heading -->
     <div style="text-align:center;margin-bottom:2.75rem;">
       <h2 style="font-size:clamp(1.6rem,4vw,2.2rem);font-weight:800;
                  margin-bottom:.75rem;">
@@ -246,10 +217,8 @@
       </p>
     </div>
 
-    <!-- Code window -->
     <div class="code-window" style="border-radius:16px;overflow:hidden;">
 
-      <!-- macOS chrome bar -->
       <div style="display:flex;align-items:center;justify-content:space-between;
                   padding:.65rem 1rem;background:var(--surf2);
                   border-bottom:1px solid var(--border);">
@@ -264,7 +233,6 @@
         <div style="width:56px;"></div>
       </div>
 
-      <!-- R code -->
       <div style="padding:1.5rem;overflow-x:auto;background:var(--surf);">
         <pre class="mono" style="font-size:.82rem;line-height:1.85;"><span class="rc"># Callaway &amp; Sant'Anna (2021) — Staggered DiD</span>
 <span class="rf">library</span>(<span class="rv">did</span>)
@@ -280,7 +248,6 @@ agg <span class="rk">&lt;-</span> <span class="rf">aggte</span>(out, <span class
 <span class="rf">summary</span>(agg)</pre>
       </div>
 
-      <!-- Run bar -->
       <div style="display:flex;align-items:center;justify-content:space-between;
                   flex-wrap:wrap;gap:.75rem;
                   padding:.75rem 1.5rem;
@@ -300,7 +267,6 @@ agg <span class="rk">&lt;-</span> <span class="rf">aggte</span>(out, <span class
         </span>
       </div>
 
-      <!-- Output -->
       <div id="outputArea" style="background:var(--surf);padding:1.5rem;min-height:110px;">
         <div id="outputPlaceholder" style="text-align:center;padding:1.25rem 0;">
           <p class="mono" style="font-size:.74rem;color:var(--dim);">
@@ -314,15 +280,12 @@ agg <span class="rk">&lt;-</span> <span class="rf">aggte</span>(out, <span class
              style="display:none;white-space:pre-wrap;word-break:break-word;"></div>
       </div>
 
-    </div><!-- /code-window -->
+    </div>
 
   </div>
 </section>
 
 
-<!-- ════════════════════════════════════════════
-     FEATURES
-════════════════════════════════════════════ -->
 <section style="padding:5rem 1.5rem;">
   <div class="container">
 
@@ -396,9 +359,6 @@ agg <span class="rk">&lt;-</span> <span class="rf">aggte</span>(out, <span class
 </section>
 
 
-<!-- ════════════════════════════════════════════
-     CTA
-════════════════════════════════════════════ -->
 <section style="padding:5rem 1.5rem;text-align:center;
                 background:rgba(99,102,241,.05);
                 border-top:1px solid rgba(99,102,241,.12);">
@@ -418,9 +378,6 @@ agg <span class="rk">&lt;-</span> <span class="rf">aggte</span>(out, <span class
 </section>
 
 
-<!-- ════════════════════════════════════════════
-     FOOTER
-════════════════════════════════════════════ -->
 <footer style="padding:2rem 1.5rem;text-align:center;
                border-top:1px solid var(--border);">
   <p style="font-size:.8rem;color:var(--dim);">
@@ -442,11 +399,12 @@ agg <span class="rk">&lt;-</span> <span class="rf">aggte</span>(out, <span class
 
 
 <!-- ════════════════════════════════════════════
-     WEBR — loads only when user clicks Run
+     WEBR — FIX: koristi Shelter API umjesto webR.captureR
 ════════════════════════════════════════════ -->
 <script type="module">
-  let webR   = null;
-  let ready  = false;
+  let webR    = null;
+  let shelter = null;
+  let ready   = false;
   let running = false;
 
   const $btn    = document.getElementById('runBtn');
@@ -470,7 +428,7 @@ agg <span class="rk">&lt;-</span> <span class="rf">aggte</span>(out, <span class
   const setBusy = busy => {
     $btn.disabled = busy;
     if (busy) {
-      $icon.innerHTML = '<span class="spin-anim">◌</span>';
+      $icon.innerHTML   = '<span class="spin-anim">◌</span>';
       $text.textContent = 'Running…';
     } else {
       $icon.textContent = '▶';
@@ -491,6 +449,8 @@ agg <span class="rk">&lt;-</span> <span class="rf">aggte</span>(out, <span class
         const { WebR } = await import('https://webr.r-wasm.org/latest/webr.mjs');
         webR = new WebR();
         await webR.init();
+        /* ── Shelter — novi API za captureR ── */
+        shelter = await new webR.Shelter();
       }
 
       /* ── Step 2: install packages (once) ────────────────── */
@@ -508,7 +468,7 @@ agg <span class="rk">&lt;-</span> <span class="rf">aggte</span>(out, <span class
       setStatus('Running att_gt() + aggte()…', '#58a6ff');
       setOutput('<span class="td">⚙ Running analysis…</span>');
 
-      const result = await webR.captureR(`
+      const code = `
 suppressPackageStartupMessages(library(did))
 data(mpdta)
 
@@ -530,19 +490,22 @@ summary(aggte(out, type = "simple"))
 
 cat("\\n=== Event-Study (dynamic aggregation) ===\\n")
 summary(aggte(out, type = "dynamic"))
-      `);
+`;
+
+      /* ── GLAVNI FIX: shelter.captureR umjesto webR.captureR ── */
+      const result = await shelter.captureR(code, { withAutoprint: true });
 
       /* ── Step 4: render output ──────────────────────────── */
       let raw = result.output
         .filter(m => m.type === 'stdout')
         .map(m => m.data)
         .join('\n')
-        /* HTML-escape first */
         .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-        /* highlight section headers */
         .replace(/(===.*?===)/g, '<span class="th">$1</span>')
-        /* highlight significance stars */
         .replace(/(\*+)/g, '<span class="ts">$1</span>');
+
+      /* oslobodi memoriju */
+      await shelter.purge();
 
       setOutput(`
 <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;">
@@ -567,8 +530,9 @@ summary(aggte(out, type = "dynamic"))
         `<span class="td">Try refreshing and running again.</span>`
       );
       setStatus('Error — see output', '#ff7b72');
-      webR  = null;
-      ready = false;
+      webR    = null;
+      shelter = null;
+      ready   = false;
     } finally {
       running = false;
       setBusy(false);
