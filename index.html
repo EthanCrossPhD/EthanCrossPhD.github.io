@@ -452,12 +452,22 @@ agg <span class="rk">&lt;-</span> <span class="rf">aggte</span>(out, <span class
       /* ── Step 2: install packages (once) ────────────────── */
       if (!ready) {
         setStatus('Installing packages (~60–90s, one-time)…', 'var(--orange)');
+
         setOutput(
-          '<span class="td">📦 Installing dependencies: <span style="color:#a5d6ff">fastglm</span>, <span style="color:#a5d6ff">DRDID</span>, <span style="color:#a5d6ff">did</span>…\n' +
-          'This only happens once — subsequent runs are instant.</span>'
+          '<span class="td">📦 [1/3] Installing <span style="color:#a5d6ff">fastglm</span>…</span>'
         );
-        // ── FIX: instaliraj sve zavisnosti eksplicitno ──
-        await webR.installPackages(['fastglm', 'DRDID', 'did']);
+        await webR.installPackages(['fastglm']);
+
+        setOutput(
+          '<span class="td">📦 [2/3] Installing <span style="color:#a5d6ff">DRDID</span>…</span>'
+        );
+        await webR.installPackages(['DRDID']);
+
+        setOutput(
+          '<span class="td">📦 [3/3] Installing <span style="color:#a5d6ff">did</span>…</span>'
+        );
+        await webR.installPackages(['did']);
+
         ready = true;
       }
 
