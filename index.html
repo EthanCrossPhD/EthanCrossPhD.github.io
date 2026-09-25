@@ -270,7 +270,7 @@ agg <span class="rk">&lt;-</span> <span class="rf">aggte</span>(out, <span class
       <div id="outputArea" style="background:var(--surf);padding:1.5rem;min-height:110px;">
         <div id="outputPlaceholder" style="text-align:center;padding:1.25rem 0;">
           <p class="mono" style="font-size:.74rem;color:var(--dim);">
-            ⏱ First run installs R packages (~30–60 s) · Subsequent runs are instant
+            ⏱ First run installs R packages (~60–90 s) · Subsequent runs are instant
           </p>
           <p style="font-size:.7rem;color:#2d333b;margin-top:.4rem;">
             Powered by WebR — real R via WebAssembly, no server required
@@ -398,9 +398,6 @@ agg <span class="rk">&lt;-</span> <span class="rf">aggte</span>(out, <span class
 </footer>
 
 
-<!-- ════════════════════════════════════════════
-     WEBR — FIX: koristi Shelter API umjesto webR.captureR
-════════════════════════════════════════════ -->
 <script type="module">
   let webR    = null;
   let shelter = null;
@@ -449,18 +446,18 @@ agg <span class="rk">&lt;-</span> <span class="rf">aggte</span>(out, <span class
         const { WebR } = await import('https://webr.r-wasm.org/latest/webr.mjs');
         webR = new WebR();
         await webR.init();
-        /* ── Shelter — novi API za captureR ── */
         shelter = await new webR.Shelter();
       }
 
       /* ── Step 2: install packages (once) ────────────────── */
       if (!ready) {
-        setStatus('Installing did package (~30–60s, one-time)…', 'var(--orange)');
+        setStatus('Installing packages (~60–90s, one-time)…', 'var(--orange)');
         setOutput(
-          '<span class="td">📦 Installing <span style="color:#a5d6ff">did</span> package…\n' +
+          '<span class="td">📦 Installing dependencies: <span style="color:#a5d6ff">fastglm</span>, <span style="color:#a5d6ff">DRDID</span>, <span style="color:#a5d6ff">did</span>…\n' +
           'This only happens once — subsequent runs are instant.</span>'
         );
-        await webR.installPackages(['did']);
+        // ── FIX: instaliraj sve zavisnosti eksplicitno ──
+        await webR.installPackages(['fastglm', 'DRDID', 'did']);
         ready = true;
       }
 
@@ -492,7 +489,6 @@ cat("\\n=== Event-Study (dynamic aggregation) ===\\n")
 summary(aggte(out, type = "dynamic"))
 `;
 
-      /* ── GLAVNI FIX: shelter.captureR umjesto webR.captureR ── */
       const result = await shelter.captureR(code, { withAutoprint: true });
 
       /* ── Step 4: render output ──────────────────────────── */
@@ -504,7 +500,6 @@ summary(aggte(out, type = "dynamic"))
         .replace(/(===.*?===)/g, '<span class="th">$1</span>')
         .replace(/(\*+)/g, '<span class="ts">$1</span>');
 
-      /* oslobodi memoriju */
       await shelter.purge();
 
       setOutput(`
