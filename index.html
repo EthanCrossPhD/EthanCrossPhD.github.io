@@ -451,26 +451,38 @@ agg <span class="rk">&lt;-</span> <span class="rf">aggte</span>(out, <span class
 
       /* ── Step 2: install + verify packages (once) ───────── */
       if (!ready) {
-        setStatus('Installing packages (~60–90s, one-time)…', 'var(--orange)');
+        setStatus('Installing packages (~90s, one-time)…', 'var(--orange)');
 
-        // fastglm removed — not available in WebR repo
-        // DRDID and did are sufficient for DR estimation
-        const pkgs = [
-          { name: 'DRDID', label: '1/2' },
-          { name: 'did',   label: '2/2' },
-        ];
+        // fastglm is a hard dep of DRDID + did (RcppEigen-based)
+        // webr::install() uses r-universe which has pre-built WASM binaries
+        setOutput('<span class="td">📦 [1/3] Installing fastglm…</span>');
+        await webR.evalR(`
+          webr::install(
+            "fastglm",
+            repos = c("https://r-universe.dev", "https://repo.r-wasm.org/")
+          )
+        `);
 
-        for (const pkg of pkgs) {
-          setOutput(
-            `<span class="td">📦 [${pkg.label}] Installing <span style="color:#a5d6ff">${pkg.name}</span>…</span>`
-          );
-          await webR.installPackages([pkg.name]);
-        }
+        setOutput('<span class="td">📦 [2/3] Installing DRDID…</span>');
+        await webR.evalR(`
+          webr::install(
+            "DRDID",
+            repos = c("https://r-universe.dev", "https://repo.r-wasm.org/")
+          )
+        `);
 
-        // Verify via actual R library() calls
+        setOutput('<span class="td">📦 [3/3] Installing did…</span>');
+        await webR.evalR(`
+          webr::install(
+            "did",
+            repos = c("https://r-universe.dev", "https://repo.r-wasm.org/")
+          )
+        `);
+
+        // Verify all three load cleanly
         setOutput('<span class="td">🔍 Verifying packages load correctly…</span>');
         await webR.evalR(
-          `invisible(lapply(c("DRDID","did"), library, character.only = TRUE))`
+          `invisible(lapply(c("fastglm","DRDID","did"), library, character.only = TRUE))`
         );
 
         ready = true;
