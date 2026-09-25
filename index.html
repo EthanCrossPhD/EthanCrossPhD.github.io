@@ -449,7 +449,7 @@ agg <span class="rk">&lt;-</span> <span class="rf">aggte</span>(out, <span class
         shelter = await new webR.Shelter();
       }
 
-      /* ── Step 2: install packages (once) ────────────────── */
+      /* ── Step 2: install + verify packages (once) ───────── */
       if (!ready) {
         setStatus('Installing packages (~60–90s, one-time)…', 'var(--orange)');
 
@@ -459,23 +459,19 @@ agg <span class="rk">&lt;-</span> <span class="rf">aggte</span>(out, <span class
           { name: 'did',     label: '3/3' },
         ];
 
+        // Sequential install — one at a time
         for (const pkg of pkgs) {
           setOutput(
             `<span class="td">📦 [${pkg.label}] Installing <span style="color:#a5d6ff">${pkg.name}</span>…</span>`
           );
           await webR.installPackages([pkg.name]);
-
-          // Verifikacija — čeka dok paket ne bude stvarno loadable
-          const check = await webR.evalR(
-            `requireNamespace('${pkg.name}', quietly = TRUE)`
-          );
-          const ok = await check.toBoolean();
-          if (!ok) {
-            throw new Error(
-              `Package '${pkg.name}' installed but cannot load. Refresh and try again.`
-            );
-          }
         }
+
+        // Verify via actual R library() calls — real R error if anything failed
+        setOutput('<span class="td">🔍 Verifying packages load correctly…</span>');
+        await webR.evalR(
+          `invisible(lapply(c("fastglm","DRDID","did"), library, character.only = TRUE))`
+        );
 
         ready = true;
       }
